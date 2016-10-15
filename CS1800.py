@@ -29,7 +29,12 @@ def inverse(a, b, both = False):
         return x[-1] % b if r[0] == 1 else None    
 
 def primefact(number):
-    """ Prime factorization of 'number'."""
+    """ Prime factorization of 'number'.
+        Returns a list of 2-tuples in which the first
+        element is the prime factor and the second is the
+        number of times that prime appears.  For example,
+        [(2,1), (5,3)] corresponds to  2^1 * 5^3 = 250
+        ( 2**1 * 5**3 in Python syntax )."""
 
     if isprime(number) or number == 1:
         return [(number, 1)]
@@ -37,6 +42,8 @@ def primefact(number):
         factors = []
         counts = []
         for primenum in (prime(n) for n in xrange(1, number)):
+            if number == 1:
+                break
             if not number % primenum:
                 factors.append(primenum)
                 counts.append(1)
