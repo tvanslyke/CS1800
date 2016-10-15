@@ -83,6 +83,7 @@ def cartesian(*sets):
 def subsets(s, cardinality):
     """ Returns a set of subsets with the specified cardinality.
         The subsets will be selected from input set 's'."""
+    pass
     
     
 def powerset(s):
@@ -137,7 +138,7 @@ def organize(seq):
     return f/(reduce(lambda x, y: x * y, [factorial(n) for n in seq]))
 
 if __name__ == "__main__":
-
+    pass
 
 
 
