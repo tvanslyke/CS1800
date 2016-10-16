@@ -118,7 +118,7 @@ def breakRSA(e, n, message = None):
     tot = (p - 1) * (q - 1)
     d = inverse(e, tot, both = False)
     if message:
-        return [num ** d % 33 for num in message]
+        return [num ** d % n for num in message]
     else:
         return d
 
