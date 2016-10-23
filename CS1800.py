@@ -179,15 +179,7 @@ def pigeon(bins, pigeons):
         that a bin/box must hold no matter how the 'pigeons' are arranged."""
     return pigeons // bins + bool(pigeons % bins)
 
-def arrange(n, k):
-    """ Finds all possible arangements of k categories in n bins.
-        Ex:  how many ways can 'n' sodas be purchased, given that there
-             are 'k' brands."""
-    return choose(n + k - 1, k - 1)
-
-
 def organize(seq):
-    """ I forget what this does, but it worked for whatever it was."""
     f = factorial(sum(seq))
     return f/(reduce(lambda x, y: x * y, [factorial(n) for n in seq]))
 
