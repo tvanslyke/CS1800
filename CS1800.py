@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from sympy import isprime, prime, factorial
 
 def euclid(a, b):
@@ -15,18 +16,17 @@ def inverse(a, b, both = False):
         the equation A*x + B*y = gcd(x,y)"""
     x = [1, 0]
     y = [0, 1]
-    r = [a, b]
-    q = r[0] / r[1]
-    r[0], r[1] = r[1], r[0] % r[1]
+    q = a / b
+    a, b = b, a % a
     while r[1]:
         x[0], x[1] = x[1], x[0] - q * x[1]
         y[0], y[1] = y[1], y[0] - q * y[1]
-        q = r[0] / r[1]
-        r[0], r[1] = r[1], r[0] % r[1]
+        q = a / b
+        a, b = b, a % a
     if both:
         return (x[-1], y[-1]) 
     else:
-        return x[-1] % b if r[0] == 1 else None    
+        return x[-1] % b if a == 1 else None    
 
 def primefact(number):
     """ Prime factorization of 'number'.
@@ -52,6 +52,9 @@ def primefact(number):
                     counts[-1] += 1
                     number = number // primenum
         return zip(factors, counts)
+
+def encrypt_general(message, encrypter, modulo = 26):
+    return 
 
 def encrypt(message, a, b):
     """ Encrypts a message with formula y = a * x + b.
@@ -93,9 +96,44 @@ def subsets(s, cardinality):
     pass
     
     
+
+
 def powerset(s):
     """ Returns the powerset of a set.  Subsets will be instances of
-        the 'frozenset' type. """
+        the 'frozenset' type.
+
+        This is the optimal option as it is far faster than the others
+        for larger sets and correctly computes powersets of powersets.
+        ie) it handles sets containing sets correctly.
+
+        NOTE:  This will hog up your RAM if you use it to compute
+               the power set of the power set of a set larger than 4 elements.
+               I used all 32 gigs of ram trying pset(pset({1,2,3,4,5})).
+               Thats 4294967296 elements, and each element eats up a lot of
+               memory!
+
+        This implementation is recursive."""
+    def iterate(s, newSet = None):
+        if newSet is None:
+            newSet = set()
+            s = {item for item in s}
+        thisItem = frozenset([s.pop()])
+        newSet.add(thisItem)
+        for item in set(newSet):
+            newSet.add(frozenset.union(thisItem, item))
+        if s:
+            return iterate(s, newSet)
+        else:
+            newSet.add(frozenset())
+            return newSet
+
+    return iterate(s)
+
+pset = powerset
+
+def powerset_old(s):
+    """ Returns the powerset of a set.  Subsets will be instances of
+        the 'frozenset' type. Broken for sets containing sets. ¯\_(ツ)_/¯"""
     sets = set([frozenset([item]) for item in s])
     lengthstart = 0
     while len(sets) != lengthstart:
@@ -105,6 +143,7 @@ def powerset(s):
         
     return set([frozenset(subset) for subset in sets] + [frozenset()])
 
+    
 def powerset_alt(s):
     """ Much slower way of getting the powerset."""
     tuples = cartesian(*[s for _ in range(len(s))])
@@ -146,6 +185,8 @@ def organize(seq):
 
 if __name__ == "__main__":
     pass
+    
+
 
 
 
