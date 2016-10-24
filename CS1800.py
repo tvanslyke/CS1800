@@ -129,7 +129,13 @@ def powerset(s):
 
     return iterate(s)
 
-pset = powerset
+def totient(num):
+    """ Returns the totient of num."""
+    if isprime(num):
+        return num - 1
+    else:
+        return sum((1 for n in xrange(1, num) if euclid(num, n) == 1))
+        
 
 def powerset_old(s):
     """ Returns the powerset of a set.  Subsets will be instances of
