@@ -178,9 +178,9 @@ def choose(n, r):
 permutations = permute
 combinations = choose
 
-def binom(num):
-    """ Coefficients of the resultant expansion of (x+y)^(num)."""
-    return [choose(num, n) for n in range(num+1)]
+def binom(num, xcoeff = 1, ycoeff = 1):
+    """ Coefficients of the resultant expansion of (xcoeff * x + ycoeff * y)^(num)."""
+    return [choose(num, n) * xcoeff ** (num - n) * ycoeff**n for n in range(num+1)]
 
 
 def pigeon(bins, pigeons):
