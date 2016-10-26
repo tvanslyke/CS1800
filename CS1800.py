@@ -178,6 +178,10 @@ def choose(n, r):
 permutations = permute
 combinations = choose
 
+def binom(num):
+    """ Coefficients of the resultant expansion of (x+y)^(num)."""
+    return [choose(num, n) for n in range(num+1)]
+
 
 def pigeon(bins, pigeons):
     """ Pigeon hole principle with 'n' boxes needing
