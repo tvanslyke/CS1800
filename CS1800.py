@@ -90,21 +90,18 @@ def cartesian(*sets):
         master = merge(master, s)
     return master
 
-def subsets(s, cardinality):
-    """ Returns a set of subsets with the specified cardinality.
-        The subsets will be selected from input set 's'."""
-    pass
-    
-    
+
 
 
 def powerset(s):
     """ Returns the powerset of a set.  Subsets will be instances of
         the 'frozenset' type.
 
+        May also call as 'pset(s)'.
+
         This is the optimal option as it is far faster than the others
         for larger sets and correctly computes powersets of powersets.
-        ie) it handles sets containing sets correctly.
+        (ie: it handles sets containing sets correctly.)
 
         NOTE:  This will hog up your RAM if you use it to compute
                the power set of the power set of a set larger than 4 elements.
@@ -128,6 +125,16 @@ def powerset(s):
             return newSet
 
     return iterate(s)
+pset = powerset
+
+def subsets(s, cardinality):
+    """ Returns a set of subsets with the specified cardinality.
+        The subsets will be selected from input set 's'.
+
+        Implemented poorly at the moment, but it works."""
+    return {item for item in pset(s) if (len(item) == cardinality )}
+    
+    
 
 def totient(num):
     """ Returns the totient of num."""
@@ -146,7 +153,6 @@ def powerset_old(s):
         lengthstart = len(sets)
         sets = set.union(sets, set([frozenset.union(s1, s2)
                                     for s1 in sets for s2 in sets]))
-        
     return set([frozenset(subset) for subset in sets] + [frozenset()])
 
     
@@ -155,8 +161,6 @@ def powerset_alt(s):
     tuples = cartesian(*[s for _ in range(len(s))])
     return set([frozenset(item) for item in tuples] + [frozenset()])
     
-    
-    pass
 def breakRSA(e, n, message = None):
     """ Breaks a 'nice' RSA encryption with public key '(e, n)'."""
     (p, _), (q, _)  = primefact(n)
@@ -168,19 +172,48 @@ def breakRSA(e, n, message = None):
         return d
 
 def permute(n, r):
-    """ Permutations of 'r' subitems in a set of 'n' items."""
+    """ Permutations of 'r' subitems in a set of 'n' items.
+        May also call as 'permutations(n, r)'"""
     return factorial(n)/factorial(n - r)
+permutations = permute
 
 def choose(n, r):
-    """ Combinations of 'r' subitems in a set of 'n' items"""
+    """ Combinations of 'r' subitems in a set of 'n' items.
+        May also call as 'combinations(n, r)'"""
     return permute(n, r) / factorial(r)
-
-permutations = permute
 combinations = choose
+
+def recursive_choose(n, r):
+    """ Recursive implementation of choose.  For fun."""
+    if n == r: 
+        return 1
+    elif r == 1 or n - r == 1:
+        return n
+    else:
+        return choose_recursive(n-1, r) + choose_recursive(n-1, r - 1)
+
+
+
+
+
+    
 
 def binom(num, xcoeff = 1, ycoeff = 1):
     """ Coefficients of the resultant expansion of (xcoeff * x + ycoeff * y)^(num)."""
     return [choose(num, n) * xcoeff ** (num - n) * ycoeff**n for n in range(num+1)]
+
+def pascal(row, index = None, allRows = False):
+    """ Returns the requested row of pascals triangle.
+        index:      Returns only the item at position 'index' within the row.
+        allRows:    Call with 'allRows = True' to show every row up to and including
+                    the requested row.  Priority given to 'index' over 'allRows'. """
+    
+    if index is not None:
+        return choose(row, index)
+    elif allRows:
+        return [choose(row, n) for n in range(row+1)]
+    else:
+        return binom(row)
 
 
 def pigeon(bins, pigeons):
@@ -188,6 +221,29 @@ def pigeon(bins, pigeons):
         'pigeons' items to fill them.  Gives the 'smallest maximum'
         that a bin/box must hold no matter how the 'pigeons' are arranged."""
     return pigeons // bins + bool(pigeons % bins)
+
+
+def ballbins(balls, bins, withholding= False, minimum = 0):
+    """ Returns the number of possible ways to arrange a given number of 'balls'
+        into a given number of 'bins'.
+
+        withholding: set this to true if some number of balls may be withheld
+                     from the bins.
+        minimum:     the minimum number of balls that must be contained within
+                     each bin."""
+    if withholding:
+        if balls > bins:
+            return sum([choose(bins + n - 1 - minimum * bins, balls - minimum * bins)
+                        for n in range(balls+1)])
+        else:
+            return sum([choose(bins + n - 1, bins - 1)
+                        for n in range(balls+1)])
+    else:
+        if balls > bins:
+            return choose(bins + balls - 1 - minimum * bins, balls - minimum * bins)
+        else:
+            return choose(bins + balls - 1, bins - 1 )
+         
 
 def organize(seq):
     f = factorial(sum(seq))
